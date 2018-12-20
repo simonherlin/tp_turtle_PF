@@ -1,6 +1,5 @@
 import System.IO.Unsafe
 import System.Random
---import Path
 
 data Color = Color RGB 
             | Red 
