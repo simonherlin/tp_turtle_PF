@@ -1,6 +1,11 @@
 import System.IO.Unsafe
 import System.Random
 
+{-- 
+
+  DATA
+
+--}
 data Color = Color RGB 
             | Red 
             | Blue 
@@ -21,6 +26,12 @@ data Screen = Screen {
   height::Int,
   shapes::[Shape]
 } deriving(Show)
+
+{--
+
+  Function
+
+--}
 
 -- get String RGB by COlor 
 getColor::Color -> String
