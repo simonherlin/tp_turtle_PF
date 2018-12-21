@@ -91,7 +91,7 @@ addShape (Screen w h shapes) shape = Screen w h (shape:shapes)
 
 {--
 
-Move turtle
+Parts 2 Move turtle
 
 --}
 
@@ -130,21 +130,46 @@ forward ((Turtle x y orientation position), (Screen w h shapes)) a
 backForward::(Turtle, Screen) -> Int -> (Turtle, Screen)
 backForward ((Turtle x y orientation position), (Screen w h shapes)) a = changeOrientation (forward (changeOrientation((Turtle x y orientation position), (Screen w h shapes)) pi) a) pi
 
+{--
+
+Parts 3
+
+--}
+
+-- draw rectangle with turtle
+drawRec::(Turtle, Screen) -> Int -> Int -> (Turtle, Screen)
+drawRec ((Turtle x y orientation position), (Screen w h shapes)) cote 0 = ((Turtle x y orientation position), (Screen w h shapes))
+drawRec ((Turtle x y orientation position), (Screen w h shapes)) cote a = drawRec (changeOrientation (forward ((Turtle x y orientation position), (Screen w h shapes)) cote) (pi/2)) cote (a - 1)
+
+-- draw circle with turtle
+-- drawCircle::(Turtle, Screen) -> Int -> (Turtle, Screen)
+
 
 main::IO()
 main = do
-  export s2 "TORTUE.html"
+-- Draw rec first part of part 3
+  export s2 "draw_rectangle.html"
     where
       t = changePosition turtleBegin True
       s = emptyScreen 1000 1000
-      m1 = forward (t, s) 30
-      m2 = changeOrientation m1 (pi/2)
-      m3 = forward m2 50
-      m4 = changeOrientation m3 (pi/2)
-      m5 = forward m4 100
-      m6 = changeOrientation m5 (pi/2)
-      (turtle, s2) = backForward m6 30
+      width = 300
+      numberCoteRec = 4
+      (turtle, s2) = drawRec (t, s) width numberCoteRec
 
+  -- partie 2
+  -- export s2 "TORTUE.html"
+  --   where
+  --     t = changePosition turtleBegin True
+  --     s = emptyScreen 1000 1000
+  --     m1 = forward (t, s) 30
+  --     m2 = changeOrientation m1 (pi/2)
+  --     m3 = forward m2 50
+  --     m4 = changeOrientation m3 (pi/2)
+  --     m5 = forward m4 100
+  --     m6 = changeOrientation m5 (pi/2)
+  --     (turtle, s2) = backForward m6 30
+
+  -- partie 1 avec test
   -- print $ addShape((emptyScreen 1000 1000) (Line Red (x, y) (newX, newY)))
   -- print $ addShape(Screen 1000 1000 []) (Circle (Color (RGB 255 100 12)) (80,150) 80)
   -- print $ myRandom 100
