@@ -62,12 +62,7 @@ getRGB (RGB r g b) = "rgb("++(show r)++","++(show g)++","++(show b)++")"
 convert::Shape -> String
 convert (Circle color (x,y) r) = "<circle cx=\""++(show x)++"\" cy=\""++(show y)++"\" r=\""++(show r)++"\" fill=\""++(getColor color)++"\"/>"
 convert (Rect color (x, y) w h) = "<rect x=\""++(show x)++"\" y=\""++(show y)++"\" width=\""++(show w)++"\" height=\""++(show h)++"\"  fill=\""++(getColor color)++"\"/>"
-convert (Line color (x, y) (x2, y2)) = "<path d=\"M "++(show x)++" "++(show y)++" l"++(show x2)++" "++(show y2)++"\" stroke=\""++(getColor color)++"\" stroke-width=\"3\" fill=\"none\"/>"
-
--- get string line
--- getLines::(Int, Int) -> String
--- getLines [] = ""
--- getLines ((x,y):ls) = "l "++(show x)++" "++(show y)++" "++(getLines ls)
+convert (Line color (x, y) (x2, y2)) = "<path d=\"M "++(show x)++" "++(show y)++" l "++(show x2)++" "++(show y2)++"\" stroke=\""++(getColor color)++"\" stroke-width=\"3\" fill=\"none\"/>"
 
 -- build doc html with Screen containing Shapes
 docHTML::Screen -> String
@@ -112,21 +107,6 @@ changePosition (Turtle x y orientation position) bool = (Turtle x y orientation 
 changeOrientation::(Turtle, Screen) -> Float -> (Turtle, Screen)
 changeOrientation ((Turtle x y orientation position), (Screen w h shapes)) a = ((Turtle x y (orientation + a) position), (Screen w h shapes))
 
--- forward turtle
-forward::(Turtle, Screen) -> Int -> (Turtle, Screen)
-forward ((Turtle x y orientation position), (Screen w h shapes)) a 
-    | position == True = (t, addShape((Screen newX newY shapes) s))
-    | otherwise = (t, (Screen newX newY shapes))
-      where
-          newX = fromIntegral (calculX a orientation)
-          newY = fromIntegral (calculy a orientation)
-          t = (Turtle newX newY orientation position)
-          s = Line Red (x, y) (newX, newY)
-
--- back forward
-backForward::(Turtle, Screen) -> Int -> (Turtle, Screen)
-backForward ((Turtle x y orientation position), (Screen w h shapes)) a = changeOrientation(forward(changeOrientation((Turtle x y orientation position), (Screen w h shapes) 180)) 180)
-
 -- calcul of new position y
 calculY::Int -> Float -> Integer
 calculY dist rad = toInteger (round ((sin rad) * (fromInteger (toInteger dist))))
@@ -135,15 +115,36 @@ calculY dist rad = toInteger (round ((sin rad) * (fromInteger (toInteger dist)))
 calculX::Int -> Float -> Integer
 calculX dist rad = toInteger (round ((cos rad) * (fromInteger (toInteger dist))))
 
+-- forward turtle
+forward::(Turtle, Screen) -> Int -> (Turtle, Screen)
+forward ((Turtle x y orientation position), (Screen w h shapes)) a 
+    | position == True = (t, (addShape(Screen w h shapes ) s))
+    | otherwise = (t, (Screen w h shapes))
+      where
+          newX = fromIntegral (calculX a orientation)
+          newY = fromIntegral (calculY a orientation)
+          t = (Turtle (x + newX) (y + newY) orientation position)
+          s = Line Red (x, y) (newX, newY)
+
+-- back forward
+backForward::(Turtle, Screen) -> Int -> (Turtle, Screen)
+backForward ((Turtle x y orientation position), (Screen w h shapes)) a = changeOrientation (forward (changeOrientation((Turtle x y orientation position), (Screen w h shapes)) pi) a) pi
+
+
 main::IO()
 main = do
-  export m3 "TORTUE.html"
+  export s2 "TORTUE.html"
     where
       t = changePosition turtleBegin True
-      s = emptyScreen
-      m1 = forward (t,s) 150
+      s = emptyScreen 1000 1000
+      m1 = forward (t, s) 30
       m2 = changeOrientation m1 (pi/2)
-      m3 = forward m2 200
+      m3 = forward m2 50
+      m4 = changeOrientation m3 (pi/2)
+      m5 = forward m4 100
+      m6 = changeOrientation m5 (pi/2)
+      (turtle, s2) = backForward m6 30
+
   -- print $ addShape((emptyScreen 1000 1000) (Line Red (x, y) (newX, newY)))
   -- print $ addShape(Screen 1000 1000 []) (Circle (Color (RGB 255 100 12)) (80,150) 80)
   -- print $ myRandom 100
