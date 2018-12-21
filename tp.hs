@@ -13,7 +13,8 @@ data Color = Color RGB
             | Black 
             | White 
             | Yellow 
-            | Orange deriving(Show)
+            | Orange 
+            | Random deriving(Show)
 
 data RGB = RGB Int Int Int deriving(Show)
 
@@ -42,6 +43,7 @@ getColor Black = (getRGB (RGB 0 0 0))
 getColor White = (getRGB (RGB 255 255 255))
 getColor Yellow = (getRGB (RGB 255 255 0))
 getColor Orange = (getRGB (RGB 255 140 0))
+getColor Random = (getRGB (RGB (myRandom 255) (myRandom 255) (myRandom 255)))
 getColor (Color rgb) = (getRGB rgb)
 
 -- get string RGB
@@ -70,7 +72,7 @@ export screen name = writeFile name (docHTML screen)
 -- Function alea REC
 aleaRec::Screen -> Int -> Screen
 aleaRec screen 0 = screen
-aleaRec screen a = newAleaRec (addShape screen (Rect (Color (RGB (myRandom 255) (myRandom 255) (myRandom 255))) ((myRandom 1000),(myRandom 1000)) (myRandom 100) (myRandom 100))) (a - 1)
+aleaRec screen a = aleaRec (addShape screen (Rect Random ((myRandom 1000),(myRandom 1000)) (myRandom 100) (myRandom 100))) (a - 1)
 
 -- Random int in range
 myRandom :: Int -> Int
