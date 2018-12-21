@@ -115,12 +115,13 @@ changeOrientation ((Turtle x y orientation position), (Screen w h shapes)) a = (
 -- forward turtle
 forward::(Turtle, Screen) -> Int -> (Turtle, Screen)
 forward ((Turtle x y orientation position), (Screen w h shapes)) a 
-    | position == True = (t, addShape((Screen newX newY shapes) (Line Red (x, y) (newX, newY))))
+    | position == True = (t, addShape((Screen newX newY shapes) s))
     | otherwise = (t, (Screen newX newY shapes))
       where
           newX = fromIntegral (calculX a orientation)
           newY = fromIntegral (calculy a orientation)
           t = (Turtle newX newY orientation position)
+          s = Line Red (x, y) (newX, newY)
 
 -- back forward
 backForward::(Turtle, Screen) -> Int -> (Turtle, Screen)
@@ -136,19 +137,21 @@ calculX dist rad = toInteger (round ((cos rad) * (fromInteger (toInteger dist)))
 
 main::IO()
 main = do
-  -- print $ myRandom 100
+  export m3 "TORTUE.html"
+    where
+      t = changePosition turtleBegin True
+      s = emptyScreen
+      m1 = forward (t,s) 150
+      m2 = changeOrientation m1 (pi/2)
+      m3 = forward m2 200
+  -- print $ addShape((emptyScreen 1000 1000) (Line Red (x, y) (newX, newY)))
   -- print $ addShape(Screen 1000 1000 []) (Circle (Color (RGB 255 100 12)) (80,150) 80)
+  -- print $ myRandom 100
   -- export (aleaRec (emptyScreen 1000 1000 ) 10) "tp_tutrle_first_part.html" 
   -- export (Screen 1000 1000 [c,r,l]) "first_test.html"
   -- where c = (Circle (Color (RGB 255 100 12)) (80,150) 80)
   --       r = (Rect Blue (140,200) 60 50)
   --       l = (Line Yellow (200,300) (50,80))
-  export m "TORTUE.html"
-    where
-      t = changePosition turtleBegin True
-      s = emptyScreen
-      m1 = forward (t,s) 150
-      m2 = changeOrientation m2 (pi/2)
-      m3 = forward m3 200
-  -- print $ changeOrientation (turtleBegin) 361
-  -- print $ changePosition (turtleBegin) True
+
+--   -- print $ changeOrientation (turtleBegin) 2
+--   -- print $ changePosition (turtleBegin) True
