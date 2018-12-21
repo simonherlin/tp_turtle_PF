@@ -59,17 +59,18 @@ getLines::[(Int, Int)] -> String
 getLines [] = ""
 getLines ((x,y):ls) = "l "++(show x)++" "++(show y)++" "++(getLines ls)
 
--- construction doc html d'un coup
+-- build doc html with Screen containing Shapes
 docHTML::Screen -> String
 docHTML (Screen w h shapes) = "<html><head><title>TP turtle</title></head><body><svg width=\""++(show w)++"\" height=\""++(show h)++"\">"++(foldl (++) "" (map convert shapes))++"</svg></body></html>"
--- premier export 
+
+-- Export screen on HTML document 
 export::Screen -> String -> IO()
 export screen name = writeFile name (docHTML screen)
 
---new fonciton alea rec
-newAleaRec::Screen -> Int -> Screen
-newAleaRec screen 0 = screen
-newAleaRec screen a = newAleaRec (addShape screen (Rect (Color (RGB (myRandom 255) (myRandom 255) (myRandom 255))) ((myRandom 1000),(myRandom 1000)) (myRandom 100) (myRandom 100))) (a - 1)
+-- Function alea REC
+aleaRec::Screen -> Int -> Screen
+aleaRec screen 0 = screen
+aleaRec screen a = newAleaRec (addShape screen (Rect (Color (RGB (myRandom 255) (myRandom 255) (myRandom 255))) ((myRandom 1000),(myRandom 1000)) (myRandom 100) (myRandom 100))) (a - 1)
 
 -- Random int in range
 myRandom :: Int -> Int
@@ -87,7 +88,7 @@ main::IO()
 main = do
   -- print $ myRandom 100
   -- print $ addShape(Screen 1000 1000 []) (Circle (Color (RGB 255 100 12)) (80,150) 80)
-  export (newAleaRec (emptyScreen 1000 1000 ) 10) "tp_tutrle_first_part.html" 
+  export (aleaRec (emptyScreen 1000 1000 ) 10) "tp_tutrle_first_part.html" 
   export (Screen 1000 1000 [c,r,l]) "first_test.html"
   where c = (Circle (Color (RGB 255 100 12)) (80,150) 80)
         r = (Rect Blue (140,200) 60 50)
