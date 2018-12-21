@@ -20,7 +20,7 @@ data RGB = RGB Int Int Int deriving(Show)
 
 data Shape = Circle Color (Int, Int) Int 
             | Rect Color (Int, Int) Int Int 
-            | Line Color (Int, Int) [(Int,Int)] deriving(Show)
+            | Line Color (Int, Int) (Int,Int) deriving(Show)
 
 data Screen = Screen {
   width::Int,
@@ -62,12 +62,12 @@ getRGB (RGB r g b) = "rgb("++(show r)++","++(show g)++","++(show b)++")"
 convert::Shape -> String
 convert (Circle color (x,y) r) = "<circle cx=\""++(show x)++"\" cy=\""++(show y)++"\" r=\""++(show r)++"\" fill=\""++(getColor color)++"\"/>"
 convert (Rect color (x, y) w h) = "<rect x=\""++(show x)++"\" y=\""++(show y)++"\" width=\""++(show w)++"\" height=\""++(show h)++"\"  fill=\""++(getColor color)++"\"/>"
-convert (Line color (x, y) l) = "<path d=\"M "++(show x)++" "++(show y)++" "++(getLines l)++"\" stroke=\""++(getColor color)++"\" stroke-width=\"3\" fill=\"none\"/>"
+convert (Line color (x, y) (x2, y2)) = "<path d=\"M "++(show x)++" "++(show y)++" l"++(show x2)++" "++(show y2)++"\" stroke=\""++(getColor color)++"\" stroke-width=\"3\" fill=\"none\"/>"
 
 -- get string line
-getLines::[(Int, Int)] -> String
-getLines [] = ""
-getLines ((x,y):ls) = "l "++(show x)++" "++(show y)++" "++(getLines ls)
+-- getLines::(Int, Int) -> String
+-- getLines [] = ""
+-- getLines ((x,y):ls) = "l "++(show x)++" "++(show y)++" "++(getLines ls)
 
 -- build doc html with Screen containing Shapes
 docHTML::Screen -> String
@@ -115,14 +115,13 @@ changeOrientation ((Turtle x y orientation position), (Screen w h shapes)) a = (
 -- forward turtle
 forward::(Turtle, Screen) -> Int -> (Turtle, Screen)
 forward ((Turtle x y orientation position), (Screen w h shapes)) a 
-    | position == True = (t, addShape((Screen newX newY shapes) l)) 
+    | position == True = (t, addShape((Screen newX newY shapes) (Line Red (x, y) (newX, newY))))
     | otherwise = (t, (Screen newX newY shapes))
       where
           newX = fromIntegral (calculX a orientation)
           newY = fromIntegral (calculy a orientation)
           t = (Turtle newX newY orientation position)
-          (Line col (lx,ly) l) = (last shapes)
-          
+
 -- back forward
 backForward::(Turtle, Screen) -> Int -> (Turtle, Screen)
 backForward ((Turtle x y orientation position), (Screen w h shapes)) a = changeOrientation(forward(changeOrientation((Turtle x y orientation position), (Screen w h shapes) 180)) 180)
@@ -143,7 +142,7 @@ main = do
   -- export (Screen 1000 1000 [c,r,l]) "first_test.html"
   -- where c = (Circle (Color (RGB 255 100 12)) (80,150) 80)
   --       r = (Rect Blue (140,200) 60 50)
-  --       l = (Line Yellow (200,300) [(50,80), (-60,10), (20,-70)])
+  --       l = (Line Yellow (200,300) (50,80))
   export m "TORTUE.html"
     where
       t = changePosition turtleBegin True
