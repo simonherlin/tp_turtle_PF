@@ -103,6 +103,10 @@ turtleBegin = (Turtle 500 500 0 False)
 changePosition::Turtle -> Bool -> Turtle
 changePosition (Turtle x y orientation position) bool = (Turtle x y orientation bool)
 
+-- new change position with screen
+changePosition2::(Turtle, Screen) -> Bool -> (Turtle, Screen)
+changePosition2 ((Turtle x y orientation position), (Screen w h shapes)) bool = ((Turtle x y orientation bool), (Screen w h shapes))
+
 -- change orientation
 changeOrientation::(Turtle, Screen) -> Float -> (Turtle, Screen)
 changeOrientation ((Turtle x y orientation position), (Screen w h shapes)) a = ((Turtle x y (orientation + a) position), (Screen w h shapes))
@@ -153,15 +157,29 @@ drawPolygon::(Turtle, Screen) -> Int -> Float -> Int -> (Turtle, Screen)
 drawPolygon ((Turtle x y orientation position), (Screen w h shapes)) side angle 0 = ((Turtle x y orientation position), (Screen w h shapes))
 drawPolygon ((Turtle x y orientation position), (Screen w h shapes)) side angle numberSide = drawPolygon (changeOrientation (forward ((Turtle x y orientation position), (Screen w h shapes)) side) angle) side angle (numberSide - 1)
 
+-- create moulin
+drawMoulin::(Turtle, Screen) -> Int -> (Turtle, Screen)
+drawMoulin ((Turtle x y orientation position), (Screen w h shapes)) 0 = ((Turtle x y orientation position), (Screen w h shapes))
+drawMoulin ((Turtle x y orientation position), (Screen w h shapes)) number = drawMoulin (changeOrientation (changePosition2 (backForward (changePosition2 (drawRec (forward ((Turtle x y orientation position), (Screen w h shapes)) 100) 30 4) False) 100) True) (pi/2)) (number - 1)
+
 main::IO()
 main = do
-  
+
+-- Partie 3
+-- Draw moulin
+  -- export s2 "draw_moulin.html"
+  --   where
+  --     t = changePosition turtleBegin True
+  --     s = emptyScreen 1000 1000
+  --     m = changeOrientation (t, s) (pi / 4)
+  --     (turtle, s2) = drawMoulin m 4
+
 -- Draw circle with polygone function
-  export s2 "draw_polygon.html"
-    where
-      t = changePosition turtleBegin True
-      s = emptyScreen 1000 1000
-      (turtle, s2) = drawPolygon (t, s) 5 (2 * pi / 300) 300
+  -- export s2 "draw_polygon.html"
+  --   where
+  --     t = changePosition turtleBegin True
+  --     s = emptyScreen 1000 1000
+  --     (turtle, s2) = drawPolygon (t, s) 5 (2 * pi / 300) 300
 
 -- Draw rec first part of part 3
   -- export s2 "draw_rectangle.html"
