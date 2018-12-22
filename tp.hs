@@ -160,19 +160,22 @@ drawPolygon ((Turtle x y orientation position), (Screen w h shapes)) side angle 
 -- create moulin
 drawMoulin::(Turtle, Screen) -> Int -> (Turtle, Screen)
 drawMoulin ((Turtle x y orientation position), (Screen w h shapes)) 0 = ((Turtle x y orientation position), (Screen w h shapes))
-drawMoulin ((Turtle x y orientation position), (Screen w h shapes)) number = drawMoulin (changeOrientation (changePosition2 (backForward (changePosition2 (drawRec (forward ((Turtle x y orientation position), (Screen w h shapes)) 100) 30 4) False) 100) True) (pi/2)) (number - 1)
+drawMoulin ((Turtle x y orientation position), (Screen w h shapes)) number = drawMoulin (changeOrientation (changePosition2 (backForward (changePosition2 (drawRec (forward ((Turtle x y orientation position), (Screen w h shapes)) l) l 4) False) l) True) (pi/2)) (number - 1)
+  where
+    l = 60
+
 
 main::IO()
 main = do
 
 -- Partie 3
 -- Draw moulin
-  -- export s2 "draw_moulin.html"
-  --   where
-  --     t = changePosition turtleBegin True
-  --     s = emptyScreen 1000 1000
-  --     m = changeOrientation (t, s) (pi / 4)
-  --     (turtle, s2) = drawMoulin m 4
+  export s2 "draw_moulin.html"
+    where
+      t = changePosition turtleBegin True
+      s = emptyScreen 1000 1000
+      m = changeOrientation (t, s) (pi / 4)
+      (turtle, s2) = drawMoulin m 4
 
 -- Draw circle with polygone function
   -- export s2 "draw_polygon.html"
