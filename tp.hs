@@ -143,7 +143,19 @@ Parts 3
 -- draw rectangle with turtle
 drawRec::(Turtle, Screen) -> Int -> Int -> (Turtle, Screen)
 drawRec ((Turtle x y orientation position), (Screen w h shapes)) cote 0 = ((Turtle x y orientation position), (Screen w h shapes))
-drawRec ((Turtle x y orientation position), (Screen w h shapes)) cote a = drawRec (changeOrientation (forward ((Turtle x y orientation position), (Screen w h shapes)) cote) (pi/2)) cote (a - 1)
+drawRec ((Turtle x y orientation position), (Screen w h shapes)) cote a = 
+  drawRec 
+    (
+      changeOrientation 
+        (
+          forward 
+            ((Turtle x y orientation position), (Screen w h shapes)) 
+            cote
+        ) 
+        (pi/2)
+    ) 
+    cote 
+    (a - 1)
 
 -- fonction draw polygon
 drawPolygon::(Turtle, Screen) -> Int -> Float -> Int -> (Turtle, Screen)
@@ -179,6 +191,7 @@ courbvk ((Turtle x y orientation position), (Screen w h shapes)) nb =
     )
     (nb - 1)
 
+-- flocon von koch
 drawFlocon::(Turtle, Screen) -> Int -> (Turtle, Screen)
 drawFlocon ((Turtle x y orientation position), (Screen w h shapes)) 0 = ((Turtle x y orientation position), (Screen w h shapes))
 drawFlocon ((Turtle x y orientation position), (Screen w h shapes)) nb = 
@@ -198,16 +211,41 @@ Parts 4
 
 --}
 
+-- function repeat
+repeatFunction::(Turtle, Screen)-> Int -> Int -> Float -> (Turtle, Screen)
+repeatFunction ((Turtle x y orientation position), (Screen w h shapes)) 0 _ _ = ((Turtle x y orientation position), (Screen w h shapes))
+repeatFunction ((Turtle x y orientation position), (Screen w h shapes)) nbRepeat fow or= 
+  repeatFunction 
+    (
+      changeOrientation 
+        ( forward 
+            ((Turtle x y orientation position), (Screen w h shapes)) 
+            fow
+        )
+        or
+    )
+    (nbRepeat - 1)
+    fow
+    or
 
 main::IO()
 main = do
--- Partie 3
--- draw flocon von koch
-  export s2 "draw_flocon.html"
+-- Partie 4
+-- function repeat create Rec
+  export s2 "repeat_rec.html"
     where
       t = changePosition turtleBegin True
       s = emptyScreen 1000 1000
-      (turtle, s2) = drawFlocon (t, s) 3
+      (turtle, s2) = repeatFunction (t, s) 4 50 (pi / 2)
+
+      
+-- Partie 3
+-- draw flocon von koch
+  -- export s2 "draw_flocon.html"
+  --   where
+  --     t = changePosition turtleBegin True
+  --     s = emptyScreen 1000 1000
+  --     (turtle, s2) = drawFlocon (t, s) 3
 
 -- Draw moulin
   -- export s2 "draw_moulin.html"
