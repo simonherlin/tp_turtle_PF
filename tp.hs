@@ -145,13 +145,6 @@ drawRec::(Turtle, Screen) -> Int -> Int -> (Turtle, Screen)
 drawRec ((Turtle x y orientation position), (Screen w h shapes)) cote 0 = ((Turtle x y orientation position), (Screen w h shapes))
 drawRec ((Turtle x y orientation position), (Screen w h shapes)) cote a = drawRec (changeOrientation (forward ((Turtle x y orientation position), (Screen w h shapes)) cote) (pi/2)) cote (a - 1)
 
--- draw circle with turtle
--- drawCircle::(Turtle, Screen) -> Int -> (Turtle, Screen)
-
--- define number Side and angle
--- defineAngle::Int -> Float
--- defineAngle numberSide = pi/numberSide
-
 -- fonction draw polygon
 drawPolygon::(Turtle, Screen) -> Int -> Float -> Int -> (Turtle, Screen)
 drawPolygon ((Turtle x y orientation position), (Screen w h shapes)) side angle 0 = ((Turtle x y orientation position), (Screen w h shapes))
@@ -164,18 +157,65 @@ drawMoulin ((Turtle x y orientation position), (Screen w h shapes)) number = dra
   where
     l = 60
 
+-- flocon von koch
+courbvk::(Turtle, Screen) -> Int -> (Turtle, Screen)
+courbvk ((Turtle x y orientation position), (Screen w h shapes)) 0 = forward ((Turtle x y orientation position), (Screen w h shapes)) 10
+courbvk ((Turtle x y orientation position), (Screen w h shapes)) nb = 
+  courbvk
+    (changeOrientation
+      (courbvk
+        (changeOrientation 
+          (courbvk 
+            (changeOrientation 
+              (courbvk ((Turtle x y orientation position), (Screen w h shapes)) (nb -1)) 
+              (pi / 3)
+            ) (nb - 1)
+          ) 
+          (- 2 * pi / 3)
+        )
+        (nb - 1)
+      )
+      (pi / 3)
+    )
+    (nb - 1)
+
+drawFlocon::(Turtle, Screen) -> Int -> (Turtle, Screen)
+drawFlocon ((Turtle x y orientation position), (Screen w h shapes)) 0 = ((Turtle x y orientation position), (Screen w h shapes))
+drawFlocon ((Turtle x y orientation position), (Screen w h shapes)) nb = 
+  drawFlocon
+    (changeOrientation
+      (courbvk
+        ((Turtle x y orientation position), (Screen w h shapes))
+        3
+      )
+      (- 2 * pi / 3)
+    )
+    (nb - 1)
+
+{--
+
+Parts 4
+
+--}
+
 
 main::IO()
 main = do
-
 -- Partie 3
--- Draw moulin
-  export s2 "draw_moulin.html"
+-- draw flocon von koch
+  export s2 "draw_flocon.html"
     where
       t = changePosition turtleBegin True
       s = emptyScreen 1000 1000
-      m = changeOrientation (t, s) (pi / 4)
-      (turtle, s2) = drawMoulin m 4
+      (turtle, s2) = drawFlocon (t, s) 3
+
+-- Draw moulin
+  -- export s2 "draw_moulin.html"
+  --   where
+  --     t = changePosition turtleBegin True
+  --     s = emptyScreen 1000 1000
+  --     m = changeOrientation (t, s) (pi / 4)
+  --     (turtle, s2) = drawMoulin m 4
 
 -- Draw circle with polygone function
   -- export s2 "draw_polygon.html"
