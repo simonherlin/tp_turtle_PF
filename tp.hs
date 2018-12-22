@@ -155,6 +155,7 @@ drawPolygon ((Turtle x y orientation position), (Screen w h shapes)) side angle 
 
 main::IO()
 main = do
+  
 -- Draw circle with polygone function
   export s2 "draw_polygon.html"
     where
