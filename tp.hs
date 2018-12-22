@@ -144,17 +144,32 @@ drawRec ((Turtle x y orientation position), (Screen w h shapes)) cote a = drawRe
 -- draw circle with turtle
 -- drawCircle::(Turtle, Screen) -> Int -> (Turtle, Screen)
 
+-- define number Side and angle
+-- defineAngle::Int -> Float
+-- defineAngle numberSide = pi/numberSide
+
+-- fonction draw polygon
+drawPolygon::(Turtle, Screen) -> Int -> Float -> Int -> (Turtle, Screen)
+drawPolygon ((Turtle x y orientation position), (Screen w h shapes)) side angle 0 = ((Turtle x y orientation position), (Screen w h shapes))
+drawPolygon ((Turtle x y orientation position), (Screen w h shapes)) side angle numberSide = drawPolygon (changeOrientation (forward ((Turtle x y orientation position), (Screen w h shapes)) side) angle) side angle (numberSide - 1)
 
 main::IO()
 main = do
--- Draw rec first part of part 3
-  export s2 "draw_rectangle.html"
+-- Draw circle with polygone function
+  export s2 "draw_polygon.html"
     where
       t = changePosition turtleBegin True
       s = emptyScreen 1000 1000
-      width = 300
-      numberCoteRec = 4
-      (turtle, s2) = drawRec (t, s) width numberCoteRec
+      (turtle, s2) = drawPolygon (t, s) 5 (2 * pi / 300) 300
+
+-- Draw rec first part of part 3
+  -- export s2 "draw_rectangle.html"
+  --   where
+  --     t = changePosition turtleBegin True
+  --     s = emptyScreen 1000 1000
+  --     width = 300
+  --     numberCoteRec = 4
+  --     (turtle, s2) = drawRec (t, s) width numberCoteRec
 
   -- partie 2
   -- export s2 "TORTUE.html"
