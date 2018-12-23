@@ -229,6 +229,11 @@ execOrder w (TD n) = changeOrientation w n
 execOrders::World -> [Order] -> World
 execOrders w l = foldl execOrder w l
 
+execProg::World -> Program -> [(String, Int)] -> World
+execProg w (Instructions []) _ = w
+execProg w (Instructions ((Orders o):xs)) vars = execOrders (execProg w (Instructions xs) vars) o
+execProg w (Instructions ((Be var val):xs)) vars = w
+
 initialisationWorld::World
 initialisationWorld = World t s
   where
@@ -237,6 +242,7 @@ initialisationWorld = World t s
 
 main::IO()
 main = do
+  export s8 "instruction.html"
   export s7 "draw_rec_repeat.html"
   export s6 "draw_flocon.html"
   export s5 "draw_moulin.html"
@@ -279,4 +285,7 @@ main = do
 -- draw rec with repeat
       orders = [(AV 130), (TD (pi / 2))]
       (World turtle7 s7) = repeatOrders w orders 4
-      
+-- draw by instruction
+      ordersInstruction = [(Repeat 8 [(AV 130), (TD (pi / 4))])]
+      instructions = [(Orders ordersInstruction)]
+      (World turtle8 s8) = execProg w (Instructions instructions) []
