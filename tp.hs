@@ -200,16 +200,7 @@ courbvk w nb =
 -- flocon von koch
 drawFlocon::World -> Int -> World
 drawFlocon w 0 = w
-drawFlocon w nb = 
-  drawFlocon
-    (changeOrientation
-      (courbvk
-        w
-        3
-      )
-      (- 2 * pi / 3)
-    )
-    (nb - 1)
+drawFlocon w nb = drawFlocon (changeOrientation (courbvk w 3) (- 2 * pi / 3)) (nb - 1)
 
 {--
 
@@ -239,6 +230,14 @@ initialisationWorld = World t s
   where
     t = changePosition turtleBegin True
     s = emptyScreen 1000 1000
+
+{--
+
+Parts 5
+
+--}
+
+
 
 main::IO()
 main = do
